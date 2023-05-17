@@ -1,5 +1,5 @@
-const TransformPages = require('uni-read-pages')
-const tfPages = new TransformPages()  
+const TransformPages = require('uni-read-pages') // 获取page.json路由表进行自定义路由
+const { webpack } = new TransformPages()
 module.exports = {
   // 代理
   devServer: {
@@ -19,8 +19,13 @@ module.exports = {
 
   configureWebpack: {
     plugins: [
-      new tfPages.webpack.DefinePlugin({  
-        ROUTES: JSON.stringify(tfPages.routes)  
+      new webpack.DefinePlugin({
+        ROUTES: webpack.DefinePlugin.runtimeValue(() => {
+          const tfPages = new TransformPages({
+            includes: ['path', 'name', 'aliasPath']
+          })
+          return JSON.stringify(tfPages.routes)
+        }, true)
       })
     ]
   }

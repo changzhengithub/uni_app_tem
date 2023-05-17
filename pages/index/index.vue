@@ -8,13 +8,25 @@
 </template>
 
 <script>
+/**
+ * @desc 首页
+ * 
+ * */
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
       title: 'Hello'
     }
   },
-  onLoad() {},
+  computed: {
+		...mapState({
+			userInfo: state => state.empower.userInfo
+		})
+	},
+  created() {
+    console.log(this.userInfo)
+  },
   methods: {}
 }
 </script>

@@ -36,8 +36,9 @@
 	/**
 	 * @desc 登录
 	 * 
-	 * */ 
-	import { loginApi } from '@/api/login'
+	 * */
+	import { mapState } from 'vuex'
+	import { loginApi } from '@/api/empower'
 	
 	export default {
 		name: 'empower',
@@ -50,8 +51,18 @@
 				saveLoad: false
 			}
 		},
+		computed: {
+			...mapState({
+				systemInfo: state => state.publicVuex.systemInfo
+			})
+		},
 		onLoad(option) {
 			console.log(option)
+		},
+		created() {
+			console.log(this.systemInfo)
+			console.log(this.$Router)
+			console.log(this.$Route)
 		},
 		methods: {
 			// 登录
@@ -75,7 +86,7 @@
 						}
 						const { user, token } = res.data
 						uni.setStorageSync('token', token)
-						uni.setStorageSync('userInfo', user)
+						// uni.setStorageSync('userInfo', user)
 						// 登录成功跳转到首页
 						uni.reLaunch({
 							url: '/pages/index/index'
