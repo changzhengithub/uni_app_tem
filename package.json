@@ -7,5 +7,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "js-md5": "^0.7.3",
+    "uni-read-pages": "^1.0.5",
+    "uni-simple-router": "^2.0.8-beta.4"
+  },
+  "devDependencies": {
+    "sass": "^1.62.1",
+    "sass-loader": "^13.2.2"
+  }
 }

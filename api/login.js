@@ -1,16 +1,16 @@
-import request from './utils/request'
+import request from '@/utils/request'
 
 const api = {
-  // miniLogin: '/api/common/miniLogin'
-  miniLogin: '/api/common/miniLogin'
+  login: '/api/common/login'
 }
 
 // 登录
-export function miniLoginApi(parameter, loadText) {
+export function loginApi(parameter, loadText) {
   return request({
-    url: api.miniLogin,
+    url: api.login,
     method: 'POST',
     params: parameter,
+    auth: true,
     loadText
   })
 }

@@ -3,7 +3,7 @@
  * @author changz
  * */ 
 
-const BASE_URL = ''
+import { BASE_URL } from '@/config/env.js'
 let hasInvalid = false; // token失效，不同地方多次调用此变量也可以被访问
 
 /**
@@ -16,11 +16,12 @@ let hasInvalid = false; // token失效，不同地方多次调用此变量也可
  * @param {String} [url] - 请求地址
  * @param {String} [method] - 请求方法
  * @param {Object} [params] - 请求参数 {}
+ * @param {Boolean} [auth] - 是否授权
  * @param {String} [loadText] - 加载动画提示，默认无
  * @example request({})
  * @author changz
  * */
-function request({url, method, params, loadText}) {
+function request({url, method, params, auth, loadText}) {
   return new Promise((resolve, reject) => {
     if (loadText) {
 			uni.showToast({
@@ -31,11 +32,11 @@ function request({url, method, params, loadText}) {
     let header = {
       'content-type': 'application/json'
     }
-    if (wx.getStorageSync('token')) {
-      header['Authorization'] = wx.getStorageSync('token');
+    if (uni.getStorageSync('token') && auth) {
+      header['Authorization'] = uni.getStorageSync('token');
     }
     
-    wx.request({
+    uni.request({
       url: `${BASE_URL}${url}`,
       method,
       data: params,
@@ -54,31 +55,18 @@ function request({url, method, params, loadText}) {
           })
           hasInvalid = true
           // 跳转到登录页
-          const pages = getCurrentPages();
-          const currentPage = pages[pages.length - 1];
-          const { route, options } = currentPage
           let encodeRedi = ''
-          if (route === 'pages/statement/index') {
-            const { report_id } = options
-            const redi = `/${currentPage.route}?report_id=${report_id}`;
-            encodeRedi = encodeURIComponent(redi);
-          }
-          if (route === 'pages/warning-detail/index') {
-            const { event_id } = options
-            const redi = `/${currentPage.route}?event_id=${event_id}`;
-            encodeRedi = encodeURIComponent(redi);
-          }
-          // if (route === 'pages/event-detail/index') {
-          //   const { type, notice_id, event_ids } = options
-          //   const redi = `/${currentPage.route}?type=${type}&notice_id=${notice_id}&event_ids=${event_ids}`;
+          // const pages = getCurrentPages();
+          // const currentPage = pages[pages.length - 1];
+          // const { route, options } = currentPage
+          // if (route === 'pages/statement/index') {
+          //   const { report_id } = options
+          //   const redi = `/${currentPage.route}?report_id=${report_id}`;
           //   encodeRedi = encodeURIComponent(redi);
           // }
           setTimeout(() => {
-            let url = '/pages/empower/index'
-            if (encodeRedi) {
-              url = `/pages/empower/index?redirect=${encodeRedi}`
-            }
-            wx.reLaunch({
+            const url = `/pages/empower/index?redirect=${encodeRedi}`
+            uni.reLaunch({
               url,
               complete: function() {
                 hasInvalid = false
@@ -87,7 +75,7 @@ function request({url, method, params, loadText}) {
           }, 1500)
         } else {
           reject({
-            errMsg: `请求失败：${statusCode}`,
+            message: `请求失败：${statusCode}`,
             data: res
           })
         }
@@ -95,7 +83,7 @@ function request({url, method, params, loadText}) {
       fail(err) {
         uni.hideToast()
         reject({
-          errMsg: err.errMsg,
+          message: err.message,
           data: err
         })
       }
