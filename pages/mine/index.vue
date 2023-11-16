@@ -48,7 +48,7 @@
           <view class="info-value">{{ userInfo.created_at }}</view>
         </view>
       </view>
-      <view class="panel-item" bindtap="gotoAuthInfo">
+      <view class="panel-item">
         <view class="item-icon">
           <image src="@/static/images/mine/cell04.png" mode="" />
         </view>
@@ -60,7 +60,7 @@
         </view>
       </view>
     </view>
-    <view class="mine-logout" bindtap="logoutTab">
+    <view class="mine-logout" @click="handleLogout">
       <text>退出登录</text>
     </view>
   </view>
@@ -71,79 +71,29 @@
  * @desc 我的
  * @author xxx
  * */
-import { mapState } from 'vuex'
 
 export default {
   name: 'mine',
   data() {
     return {
-      formData: {
-        phone: '15565412365', // 账号
-        sms_code: '1111' // 密码
-      },
       saveLoad: false
     }
   },
-  computed: {
-    ...mapState({
-      userInfo: state => state.empower.userInfo
-    })
-  },
-  onLoad(option) {
-    console.log(option)
-  },
-  created() {
-    console.log(this.userInfo)
-    console.log(this.$Router)
-    console.log(this.$Route)
-  },
   methods: {
-    // 登录
-    handleLogin() {
-      const { phone, sms_code } = this.formData
-      const params = {
-        phone,
-        sms_code
-      }
-      this.saveLoad = true
-      loginApi(params, '登录中...')
-        .then(res => {
-          this.saveLoad = false
-          if (res.code !== 200) {
-            uni.showToast({
-              title: res.msg,
-              icon: 'none',
-              duration: 2000
+    // 退出登录
+    handleLogout() {
+      uni.showModal({
+        content: '确认退出',
+        confirmColor: 'red',
+        success: ({ confirm, cancel }) => {
+          if (confirm) {
+            uni.clearStorageSync()
+            uni.reLaunch({
+              url: '/pages/empower/index'
             })
-            return
           }
-          const { user, token } = res.data
-          uni.setStorageSync('token', token)
-          // uni.setStorageSync('userInfo', user)
-          // 登录成功跳转到首页
-          uni.reLaunch({
-            url: '/pages/index/index'
-          })
-          // const { redirect } = this.data
-          // if (redirect) {
-          // 	const enCodeRedirect = decodeURIComponent(redirect)
-          // 	uni.reLaunch({
-          // 		url: enCodeRedirect
-          // 	})
-          // } else {
-          // 	uni.reLaunch({
-          // 		url: '/pages/index/index'
-          // 	})
-          // }
-        })
-        .catch(err => {
-          this.saveLoad = false
-          uni.showToast({
-            title: err.message,
-            icon: 'none',
-            duration: 2000
-          })
-        })
+        }
+      })
     }
   }
 }
