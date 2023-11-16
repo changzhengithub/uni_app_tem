@@ -69,7 +69,7 @@
 <script>
 /**
  * @desc 我的
- *
+ * @author xxx
  * */
 import { mapState } from 'vuex'
 

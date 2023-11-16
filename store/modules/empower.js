@@ -1,6 +1,6 @@
 /**
  * @desc 状态管理器 - 权限控制
- * @author changz
+ * @author
 */
 
 import { loginApi, userInfoApi } from '@/api/empower'

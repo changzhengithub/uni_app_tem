@@ -10,10 +10,11 @@
 <script>
 /**
  * @desc 首页
- * 
+ * @author xxx
  * */
 import { mapState } from 'vuex'
 export default {
+  name: 'index',
   data() {
     return {
       title: 'Hello'
@@ -31,7 +32,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .content {
   display: flex;
   flex-direction: column;

@@ -1,10 +1,10 @@
 /**
  * @description 请求接口封装
- * @author changz
- * */ 
+ * @author 
+ * */
 
 import { BASE_URL } from '@/config/env.js'
-let hasInvalid = false; // token失效，不同地方多次调用此变量也可以被访问
+let hasInvalid = false // token失效，不同地方多次调用此变量也可以被访问
 
 /**
  * @description 请求方法封装
@@ -18,35 +18,34 @@ let hasInvalid = false; // token失效，不同地方多次调用此变量也可
  * @param {Object} [params] - 请求参数 {}
  * @param {Boolean} [auth] - 是否授权
  * @param {String} [loadText] - 加载动画提示，默认无
+ * @param {Object} [headers] - 自定义请求头
  * @example request({})
- * @author changz
  * */
-function request({url, method, params, auth, loadText}) {
+function request({ url, method, params, auth, loadText, headers }) {
   return new Promise((resolve, reject) => {
     if (loadText) {
-			uni.showToast({
-				title: loadText
-			})
+      uni.showLoading({
+        title: loadText
+      })
     }
-    
+
     let header = {
+      ...headers,
       'content-type': 'application/json'
     }
     if (uni.getStorageSync('token') && auth) {
-      header['Authorization'] = uni.getStorageSync('token');
+      header['Authorization'] = uni.getStorageSync('token')
     }
-    
+
     uni.request({
       url: `${BASE_URL}${url}`,
       method,
       data: params,
       header,
       success(res) {
-        uni.hideToast()
-        const { statusCode, data } = res;
-        if (statusCode == 200) {
-          resolve(data)
-        } else if (statusCode == 401) {
+        uni.hideLoading()
+        const { statusCode, data } = res
+        if (statusCode == 401) {
           if (hasInvalid) return // 已经有失效跳转到登录
           uni.showToast({
             title: '登录过期',
@@ -54,34 +53,31 @@ function request({url, method, params, auth, loadText}) {
             duration: 1500
           })
           hasInvalid = true
-          // 跳转到登录页
-          let encodeRedi = ''
-          // const pages = getCurrentPages();
-          // const currentPage = pages[pages.length - 1];
-          // const { route, options } = currentPage
-          // if (route === 'pages/statement/index') {
-          //   const { report_id } = options
-          //   const redi = `/${currentPage.route}?report_id=${report_id}`;
-          //   encodeRedi = encodeURIComponent(redi);
-          // }
-          setTimeout(() => {
-            const url = `/pages/empower/index?redirect=${encodeRedi}`
-            uni.reLaunch({
-              url,
-              complete: function() {
-                hasInvalid = false
-              }
+          const pages = getCurrentPages()
+          const currentPage = pages[pages.length - 1]
+          const { route, options } = currentPage
+          if (route === 'pages/empower/index') {
+            reject({
+              message: `请求失败：${data.msg}`,
+              data: res
             })
+            hasInvalid = false
+            return
+          }
+          setTimeout(() => {
+            // const url = `/pages/empower/index?redirect=${encodeRedi}`
+            const url = '/pages/empower/index'
+            uni.reLaunch({
+              url
+            })
+            hasInvalid = false
           }, 1500)
         } else {
-          reject({
-            message: `请求失败：${statusCode}`,
-            data: res
-          })
+          resolve(data)
         }
       },
       fail(err) {
-        uni.hideToast()
+        uni.hideLoading()
         reject({
           message: err.message,
           data: err

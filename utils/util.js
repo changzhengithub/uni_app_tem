@@ -1,7 +1,7 @@
 /**
  * @description 公共函数
  * @author changz
- * @import import { deepClone } from '@/utils/util'
+ * @import import { DeepClone } from '@/utils/util'
  * */
 
 

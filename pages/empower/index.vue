@@ -35,7 +35,7 @@
 <script>
 	/**
 	 * @desc 登录
-	 * 
+	 * @author xxx
 	 * */
 	import { mapState } from 'vuex'
 	import { loginApi } from '@/api/empower'
@@ -91,17 +91,6 @@
 						uni.reLaunch({
 							url: '/pages/index/index'
 						})
-						// const { redirect } = this.data
-						// if (redirect) {
-						// 	const enCodeRedirect = decodeURIComponent(redirect)
-						// 	uni.reLaunch({
-						// 		url: enCodeRedirect
-						// 	})
-						// } else {
-						// 	uni.reLaunch({
-						// 		url: '/pages/index/index'
-						// 	})
-						// }
 					})
 					.catch((err) => {
 						this.saveLoad = false

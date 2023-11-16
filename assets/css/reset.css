@@ -1,3 +1,8 @@
+/* *
+ * CSS RESET
+ * 小程序不支持 * 需要单独配置
+ * */
+
 * {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -35,4 +40,15 @@ ul {
 img {
   display: block;
   max-width: 100%;
+}
+
+/* 小程序 */
+view {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+image {
+  display: block;
+  /* max-width: 100%; */
 }

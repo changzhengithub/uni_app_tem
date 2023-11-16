@@ -1,6 +1,6 @@
 /**
  * @desc 状态管理器 - 公共数据
- * @author changz
+ * @author
 */
 
 import { getSystemInfoApi, getUnitConfigApi } from '@/api/public'
